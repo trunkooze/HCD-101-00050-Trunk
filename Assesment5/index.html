@@ -1,0 +1,133 @@
+ <!-- This is HCD-101:00050 for the course "Data Visualization" by Thanapol Wongtharua -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NASA Data Visualizations</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b0c10;
+      color: #c5c6c7;
+      margin: 0;
+      padding: 0;
+    }
+    h1, h2 {
+      color: #66fcf1;
+      text-align: center;
+    }
+    .nav-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      padding: 20px;
+      border-bottom: 2px solid #66fcf1;
+    }
+    .nav-point {
+      width: 20px;
+      height: 20px;
+      background-color: #66fcf1;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .section {
+      display: none;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .section.active {
+      display: block;
+    }
+    svg {
+      background: #1f2833;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    #map {
+      height: 500px;
+      width: 100%;
+      border-radius: 8px;
+    }
+    #wordcloud {
+      width: 800px;
+      height: 400px;
+      position: relative;
+      margin: auto;
+      background: #1f2833;
+      border-radius: 8px;
+      padding: 10px;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <h1>NASA Data Visualizations by Trunk</h1>
+
+  <div class="nav-bar">
+    <div class="nav-point" 
+         onmouseover="showTooltip(event, 'Numerical Data')" 
+         onmouseout="hideTooltip()" 
+         onclick="switchSection(0)"></div>
+    <div class="nav-point" 
+         onmouseover="showTooltip(event, 'Spatial Data')" 
+         onmouseout="hideTooltip()" 
+         onclick="switchSection(1)"></div>
+    <div class="nav-point" 
+         onmouseover="showTooltip(event, 'Textual Data')" 
+         onmouseout="hideTooltip()" 
+         onclick="switchSection(2)"></div>
+  </div>
+  <div id="tooltip" style="position: absolute; display: none; background: #66fcf1; color: #0b0c10; padding: 5px 10px; border-radius: 5px; font-size: 14px;"></div>
+  <script>
+    const tooltip = document.getElementById('tooltip');
+
+    function showTooltip(event, text) {
+      tooltip.style.display = 'block';
+      tooltip.textContent = text;
+      tooltip.style.left = event.pageX + 10 + 'px';
+      tooltip.style.top = event.pageY + 10 + 'px';
+    }
+
+    function hideTooltip() {
+      tooltip.style.display = 'none';
+    }
+  </script>
+
+  <div class="section" id="numerical">
+    <h2>Numerical Data: APOD Posts Per Month</h2>
+    <svg width="800" height="400"></svg>
+  </div>
+
+  <div class="section" id="spatial">
+    <h2>Spatial Data: NASA Facility Locations</h2>
+    <div id="map"></div>
+  </div>
+
+  <div class="section" id="textual">
+    <h2>Textual Data: Keywords in APOD Titles</h2>
+    <div id="wordcloud"></div>
+  </div>
+
+  <script>
+    const sections = document.querySelectorAll(".section");
+    function switchSection(index) {
+      sections.forEach((sec, i) => {
+        sec.classList.toggle("active", i === index);
+      });
+      if (index === 1 && window.map) {
+        setTimeout(() => {
+          window.map.invalidateSize();
+        }, 200);
+      }
+    }
+    switchSection(0);
+  </script>
+  <script src="main.js"></script>
+</body>
+</html>
